@@ -1,13 +1,16 @@
-name: Node.js CI
+name: Build Docker Image on Tag
 
-on: [push]
+on:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-      - run: node test.js
+      - name: Build Docker Image
+        run: |
+          docker build -t my-web:${{ github.ref_name }} .
+          echo "Successfully built image tagged with ${{ github.ref_name }}"
